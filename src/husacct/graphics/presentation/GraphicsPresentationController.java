@@ -370,7 +370,7 @@ public class GraphicsPresentationController implements UserInputListener{
 		drawingsSettingsHolder.zoomTypeChange(zoomType);
 	}
 	
-	public void doSomething(boolean showUmlLinks){
+	public void dependencyTypeChange(boolean showUmlLinks){
 		if(drawingsSettingsHolder.isShowUmlLinkInsteadOfDependencies() != showUmlLinks){
 			drawingsSettingsHolder.setShowUmlLinkInsteadOfDependencies(showUmlLinks);
 			refreshDrawing();
