@@ -9,6 +9,7 @@ import husacct.analyse.IAnalyseService;
 import husacct.common.dto.AbstractDTO;
 import husacct.common.dto.DependencyDTO;
 import husacct.common.dto.ModuleDTO;
+import husacct.common.dto.RuleDTO;
 import husacct.common.dto.ViolationDTO;
 import husacct.define.IDefineService;
 import husacct.graphics.domain.figures.ModuleFigure;
@@ -38,13 +39,21 @@ public class ModuleAndRuleController extends DrawingController {
 	
 	@Override
 	protected ArrayList<ModuleFigure> getModuleFiguresInRoot() {
-		ModuleDTO[] rootModules = defineService.getModule_AllRootModules();
-		ArrayList<ModuleFigure> rootModuleFigures = new ArrayList<ModuleFigure>();
-		for (AbstractDTO rootModule : rootModules) {
-			ModuleFigure rootModuleFigure = figureFactory.createModuleFigure(rootModule);
-			rootModuleFigures.add(rootModuleFigure);
+		ArrayList<ModuleFigure> rootModuleFigures2 = new ArrayList<ModuleFigure>();
+		for (RuleDTO rule : defineService.getDefinedRules()){
+			ModuleFigure f = figureFactory.createModuleFigure(rule.moduleFrom);
+			if (!rootModuleFigures2.contains(f)){
+				rootModuleFigures2.add(f);
+			}
 		}
-		return rootModuleFigures;
+		return rootModuleFigures2;
+//		ModuleDTO[] rootModules = defineService.getModule_AllRootModules();
+//		ArrayList<ModuleFigure> rootModuleFigures = new ArrayList<ModuleFigure>();
+//		for (AbstractDTO rootModule : rootModules) {
+//			ModuleFigure rootModuleFigure = figureFactory.createModuleFigure(rootModule);
+//			rootModuleFigures.add(rootModuleFigure);
+//		}
+//		return rootModuleFigures;
 	}
 	
 	@Override
@@ -63,21 +72,24 @@ public class ModuleAndRuleController extends DrawingController {
 
 	@Override
 	protected RelationFigure getRelationFigureBetween(ModuleFigure figureFrom, ModuleFigure figureTo) {
+		
+		
+		
 		RelationFigure dependencyFigure = null;
 		if ((figureFrom != null) && (figureTo != null) && !figureFrom.getUniqueName().equals(figureTo.getUniqueName())){ 
-			ArrayList<DependencyDTO> dependencies = new ArrayList<DependencyDTO>();
+			ArrayList<RuleDTO> rules = new ArrayList<RuleDTO>();
 			HashSet<String> physicalClassPathsFrom = defineService.getModule_AllPhysicalClassPathsOfModule(figureFrom.getUniqueName());
 			HashSet<String> physicalClassPathsTo = defineService.getModule_AllPhysicalClassPathsOfModule(figureTo.getUniqueName());
 			for (String physicalClassPathFrom : physicalClassPathsFrom){
 				for (String physicalClassPathTo : physicalClassPathsTo) {
-					DependencyDTO[] foundDependencies = analyseService.getDependenciesFromClassToClass(physicalClassPathFrom, physicalClassPathTo);
-					for (DependencyDTO tempDependency : foundDependencies)
-						dependencies.add(tempDependency);
+					RuleDTO[] foundRules = defineService.getRulesFromModuleToModule(physicalClassPathFrom, physicalClassPathTo);
+					for (RuleDTO tempRule : foundRules)
+						rules.add(tempRule);
 				}
 			}
 			try {
-				if (dependencies.size() > 0) {
-					dependencyFigure = figureFactory.createRelationFigure_Dependency(dependencies.toArray(new DependencyDTO[] {}));
+				if (rules.size() > 0) {
+					dependencyFigure = figureFactory.createRelationFigure_Dependency(rules.toArray(new DependencyDTO[] {}));
 				}
 			} catch (Exception e) {
 				logger.error(" Could not create a dependency figure." + e.getMessage());
@@ -101,6 +113,23 @@ public class ModuleAndRuleController extends DrawingController {
 			}
 		}
 		return dependencies.toArray(new DependencyDTO[] {});
+	}
+	
+//	@Override
+	protected RuleDTO[] getRulesBetween(ModuleFigure figureFrom, ModuleFigure figureTo) {
+		ArrayList<RuleDTO> rules = new ArrayList<RuleDTO>();
+		if ((figureFrom != null) && (figureTo != null) && !figureFrom.getUniqueName().equals(figureTo.getUniqueName())){ 
+			HashSet<String> physicalClassPathsFrom = defineService.getModule_AllPhysicalClassPathsOfModule(figureFrom.getUniqueName());
+			HashSet<String> physicalClassPathsTo = defineService.getModule_AllPhysicalClassPathsOfModule(figureTo.getUniqueName());
+			for (String physicalClassPathFrom : physicalClassPathsFrom){
+				for (String physicalClassPathTo : physicalClassPathsTo) {
+					RuleDTO[] foundRules = analyseService.getDependenciesFromClassToClass(physicalClassPathFrom, physicalClassPathTo);
+					for (RuleDTO tempDependency : foundRules)
+						rules.add(tempDependency);
+				}
+			}
+		}
+		return rules.toArray(new RuleDTO[] {});
 	}
 	
 	@Override

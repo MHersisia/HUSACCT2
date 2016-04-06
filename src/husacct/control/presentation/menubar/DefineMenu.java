@@ -1,12 +1,5 @@
 package husacct.control.presentation.menubar;
 
-import husacct.ServiceProvider;
-import husacct.common.locale.ILocaleService;
-import husacct.common.services.IServiceListener;
-import husacct.control.task.IStateChangeListener;
-import husacct.control.task.MainController;
-import husacct.control.task.States;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -16,6 +9,13 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 
+import husacct.ServiceProvider;
+import husacct.common.locale.ILocaleService;
+import husacct.common.services.IServiceListener;
+import husacct.control.task.IStateChangeListener;
+import husacct.control.task.MainController;
+import husacct.control.task.States;
+
 @SuppressWarnings("serial")
 public class DefineMenu extends JMenu{
 	private MainController mainController;
@@ -24,6 +24,7 @@ public class DefineMenu extends JMenu{
 	private JMenuItem reportArchitectureItem;
 	private JMenuItem exportArchitectureItem;
 	private JMenuItem importArchitectureItem;
+	private JMenuItem moduleAndRuleDiagramItem;
 
 	private ILocaleService localeService = ServiceProvider.getInstance().getLocaleService();
 	
@@ -53,8 +54,12 @@ public class DefineMenu extends JMenu{
 		reportArchitectureItem = new JMenuItem(localeService.getTranslatedString("ReportArchitecture"));
 		reportArchitectureItem.setMnemonic(getMnemonicKeycode("ReportArchitectureMnemonic"));
 		
+		moduleAndRuleDiagramItem = new JMenuItem(localeService.getTranslatedString("ModuleAndRuleDiagram"));
+		moduleAndRuleDiagramItem.setMnemonic(getMnemonicKeycode("ModuleAndRuleDiagramMnemonic"));
+		
 		this.add(defineArchitectureItem);
 		this.add(definedArchitectureDiagramItem);
+		this.add(moduleAndRuleDiagramItem);
 		this.add(exportArchitectureItem);
 		this.add(importArchitectureItem);
 		this.add(reportArchitectureItem);
@@ -62,24 +67,35 @@ public class DefineMenu extends JMenu{
 	
 	private void setListeners() {
 		defineArchitectureItem.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e){
 				mainController.getViewController().showDefineArchitecture();
 			}
 		});
 		
 		definedArchitectureDiagramItem.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e){
 				mainController.getViewController().showDefinedArchitectureDiagram();
 			}
 		});
 		
+		moduleAndRuleDiagramItem.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				mainController.getViewController().showModuleAndRuleDiagram();
+			}
+		});
+		
 		exportArchitectureItem.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e){
 				mainController.getExportImportController().showExportArchitectureGui();
 			}
 		});
 		
 		importArchitectureItem.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e){
 				mainController.getExportImportController().showImportArchitectureGui();
 				mainController.getViewController().showDefineArchitecture();
@@ -87,12 +103,14 @@ public class DefineMenu extends JMenu{
 		});
 		
 		reportArchitectureItem.addActionListener(new ActionListener(){
+			@Override
 			public void actionPerformed(ActionEvent e){
 				mainController.getExportImportController().showReportArchitectureGui();
 			}
 		});
 		
 		mainController.getStateController().addStateChangeListener(new IStateChangeListener() {
+			@Override
 			public void changeState(List<States> states) {
 				defineArchitectureItem.setEnabled(false);
 				definedArchitectureDiagramItem.setEnabled(false);
@@ -115,6 +133,7 @@ public class DefineMenu extends JMenu{
 		
 		final DefineMenu defineMenu = this;
 		localeService.addServiceListener(new IServiceListener() {
+			@Override
 			public void update() {
 				defineMenu.setText(localeService.getTranslatedString("Define"));
 				defineArchitectureItem.setText(localeService.getTranslatedString("DefineArchitecture"));

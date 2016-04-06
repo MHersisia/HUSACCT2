@@ -1,6 +1,15 @@
 package husacct.graphics.task;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.log4j.Logger;
+import org.jhotdraw.draw.ConnectionFigure;
+import org.jhotdraw.draw.Figure;
+
 import husacct.common.dto.DependencyDTO;
 import husacct.common.dto.ViolationDTO;
 import husacct.graphics.domain.Drawing;
@@ -12,21 +21,12 @@ import husacct.graphics.domain.figures.ParentFigure;
 import husacct.graphics.domain.figures.RelationFigure;
 import husacct.graphics.task.modulelayout.BasicLayoutStrategy;
 import husacct.graphics.task.modulelayout.ContainerLayoutStrategy;
-import husacct.graphics.task.modulelayout.ModuleLayoutsEnum;
 import husacct.graphics.task.modulelayout.FigureConnectorStrategy;
 import husacct.graphics.task.modulelayout.LayeredLayoutStrategy;
+import husacct.graphics.task.modulelayout.ModuleLayoutsEnum;
 import husacct.graphics.task.modulelayout.NoLayoutStrategy;
 import husacct.graphics.task.modulelayout.layered.LayoutStrategy;
 import husacct.graphics.task.modulelayout.state.DrawingState;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.log4j.Logger;
-import org.jhotdraw.draw.ConnectionFigure;
-import org.jhotdraw.draw.Figure;
 
 public abstract class DrawingController {
 	private static final double					MIN_ZOOMFACTOR	= 0.25;
@@ -54,6 +54,8 @@ public abstract class DrawingController {
 			controller = new AnalysedController();
 		} else if (drawingType == DrawingTypesEnum.INTENDED_ARCHITECTURE) {
 			controller = new DefinedController();
+		} else if (drawingType == DrawingTypesEnum.MODULE_RULE_ARCHITECTURE) {
+			controller = new ModuleAndRuleController();
 		}
 		return controller;
 	}
@@ -170,6 +172,7 @@ public abstract class DrawingController {
 						if (drawingSettingsHolder.areDependenciesShown() && drawRelationsWithoutViolations) {
 							// Draw RelationFigures without Violations
 							RelationFigure dependencyFigure = getRelationFigureBetween(figureFrom, figureTo);
+							//TODO loop through rule dto to find relations
 							if (dependencyFigure != null) {
 								connectionStrategy.connect(dependencyFigure, figureFrom, figureTo);
 								drawing.add(dependencyFigure);
@@ -395,7 +398,7 @@ public abstract class DrawingController {
 						parentNames.add(moduleFigure.getUniqueName());
 						parentFigureNameAndTypeMap.put(moduleFigure.getUniqueName(), moduleFigure.getType());
 					} else {
-						contextFigures.add((ModuleFigure) moduleFigure);
+						contextFigures.add(moduleFigure);
 					}
 				}
 				// 3) Forward to next process step
