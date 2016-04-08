@@ -11,6 +11,7 @@ import org.jhotdraw.draw.ConnectionFigure;
 import org.jhotdraw.draw.Figure;
 
 import husacct.common.dto.DependencyDTO;
+import husacct.common.dto.RuleDTO;
 import husacct.common.dto.ViolationDTO;
 import husacct.graphics.domain.Drawing;
 import husacct.graphics.domain.DrawingView;
@@ -172,7 +173,6 @@ public abstract class DrawingController {
 						if (drawingSettingsHolder.areDependenciesShown() && drawRelationsWithoutViolations) {
 							// Draw RelationFigures without Violations
 							RelationFigure dependencyFigure = getRelationFigureBetween(figureFrom, figureTo);
-							//TODO loop through rule dto to find relations
 							if (dependencyFigure != null) {
 								connectionStrategy.connect(dependencyFigure, figureFrom, figureTo);
 								drawing.add(dependencyFigure);
@@ -285,6 +285,21 @@ public abstract class DrawingController {
 		}
 	}
 	
+	public RuleDTO[] getRulesOfLine(BaseFigure selectedLine) {
+		if (selectedLine instanceof RelationFigure) {
+			ConnectionFigure cf = (ConnectionFigure) selectedLine;
+			ModuleFigure from = (ModuleFigure) cf.getStartFigure();
+			ModuleFigure to = (ModuleFigure) cf.getEndFigure();
+			return getRulesBetween(from, to);
+		} else if(selectedLine instanceof ModuleFigure){
+			ModuleFigure selectedModule = (ModuleFigure) selectedLine;
+			return getRulesBetween(selectedModule, selectedModule);
+		}else {
+		
+			return new RuleDTO[] {};
+		}
+	}
+
 	public DrawingSettingsHolder getDrawingSettingsHolder() {
 		return drawingSettingsHolder;
 	}
@@ -490,6 +505,8 @@ public abstract class DrawingController {
 	protected abstract String getUniqueNameOfParentModule(String childUniqueName);
 	
 	protected abstract ViolationDTO[] getViolationsBetween(ModuleFigure figureFrom, ModuleFigure figureTo);
+	
+	protected abstract RuleDTO[] getRulesBetween(ModuleFigure figureFrom, ModuleFigure figureTo);
 
 	protected abstract boolean hasRelationBetween(ModuleFigure figureFrom, ModuleFigure figureTo);
 	

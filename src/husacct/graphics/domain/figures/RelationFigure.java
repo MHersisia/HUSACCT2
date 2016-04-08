@@ -123,6 +123,9 @@ public class RelationFigure extends BaseFigure implements ConnectionFigure,
 			arrowTip = new ArrowTip(0.5, 13.0, 11.5, false, true, true);
 			set(AttributeKeys.END_DECORATION, arrowTip);
 			break;
+		case RULELINK:
+			// default is a straight line, so do nothing
+			break;
 		default: 
 			throw new IllegalStateException("Unknown relation type");
 		}

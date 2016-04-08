@@ -32,14 +32,14 @@ public class ViewController {
 			}
 		};
 		
-		definedArchitectureDiagramContainer = new InternalFrameController(mainController, new ImageIcon(Resource.get(Resource.ICON_DEFINE_ARCHITECTURE_DIAGRAM)), "DefinedArchitectureDiagram"){
+		definedArchitectureDiagramContainer = new InternalFrameController(mainController, new ImageIcon(Resource.get(Resource.ICON_DEFINE_ARCHITECTURE_DIAGRAM)), "ModuleAndDependenciesDiagram"){
 			@Override
 			public JInternalFrame getInternalFrame() {
 				return ServiceProvider.getInstance().getGraphicsService().getDefinedArchitectureGUI();
 			}
 		};
 		
-		moduleAndRuleDiagramContainer = new InternalFrameController(mainController, new ImageIcon(Resource.get(Resource.ICON_DEFINE_ARCHITECTURE_DIAGRAM)), "ModuleAndRuleArchitectureDiagram"){
+		moduleAndRuleDiagramContainer = new InternalFrameController(mainController, new ImageIcon(Resource.get(Resource.ICON_DEFINE_ARCHITECTURE_DIAGRAM)), "ModuleAndRuleDiagram"){
 			@Override
 			public JInternalFrame getInternalFrame() {
 				return ServiceProvider.getInstance().getGraphicsService().getModuleAndRuleGUI();

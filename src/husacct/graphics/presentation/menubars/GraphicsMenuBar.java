@@ -328,6 +328,10 @@ public class GraphicsMenuBar extends HelpableJPanel implements UserInputListener
 	}
 	
 	@Override
+	public void propertiesPaneShowRules(BaseFigure selectedFigure) {
+	}
+	
+	@Override
 	public void proportionalLinesDisable() {
 		for (UserInputListener l : listeners)
 			l.proportionalLinesDisable();
@@ -518,4 +522,6 @@ public class GraphicsMenuBar extends HelpableJPanel implements UserInputListener
 				((GraphicsPresentationController)listener).dependencyTypeChange(result);
 			}
 	}
+
+	
 }
