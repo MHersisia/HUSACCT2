@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -252,18 +254,16 @@ public class GraphicsOptionsDialog extends HelpableJDialog {
 		String values[] = {"Dependency","UML Links"};
 		toggleUmlLinks = new JComboBox<String>(values);
 		toggleUmlLinks.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				for(UserInputListener listener : listeners){
-					
-					if (listener instanceof GraphicsMenuBar){
-						boolean result = ((JComboBox)e.getSource()).getSelectedItem().toString().equals(values[0]);
-						
-						((GraphicsMenuBar)listener).dependencyTypeChange(result);
-					}
-				}
-			}
-		});
+                    
+                    @Override
+                    public void actionPerformed(ActionEvent arg0) {
+                        for(UserInputListener listener : listeners){
+                            if (listener instanceof GraphicsMenuBar){
+                                ((GraphicsMenuBar)listener).dependencyTypeChange();
+                            }
+                        }
+                    }
+                });
 		settingsPanel.add(toggleUmlLinks);
 		
 		mainPanel.add(settingsPanel);
