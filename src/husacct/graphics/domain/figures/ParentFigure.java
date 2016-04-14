@@ -317,7 +317,7 @@ public class ParentFigure extends BaseFigure {
 	@Override
     public String toString() {
         String representation = "";
-        representation += "\name: " + super.name;
+        representation += "\nName: " + super.name;
         representation += "\nType: " + type;
         representation += "\n";
         return representation;

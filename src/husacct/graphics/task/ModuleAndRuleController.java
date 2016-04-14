@@ -39,21 +39,21 @@ public class ModuleAndRuleController extends DrawingController {
 	
 	@Override
 	protected ArrayList<ModuleFigure> getModuleFiguresInRoot() {
-		ArrayList<ModuleFigure> rootModuleFigures2 = new ArrayList<ModuleFigure>();
-		for (RuleDTO rule : defineService.getDefinedRules()){
-			ModuleFigure f = figureFactory.createModuleFigure(rule.moduleFrom);
-			if (!rootModuleFigures2.contains(f)){
-				rootModuleFigures2.add(f);
-			}
-		}
-		return rootModuleFigures2;
-//		ModuleDTO[] rootModules = defineService.getModule_AllRootModules();
-//		ArrayList<ModuleFigure> rootModuleFigures = new ArrayList<ModuleFigure>();
-//		for (AbstractDTO rootModule : rootModules) {
-//			ModuleFigure rootModuleFigure = figureFactory.createModuleFigure(rootModule);
-//			rootModuleFigures.add(rootModuleFigure);
+//		ArrayList<ModuleFigure> rootModuleFigures2 = new ArrayList<ModuleFigure>();
+//		for (RuleDTO rule : defineService.getDefinedRules()){
+//			ModuleFigure f = figureFactory.createModuleFigure(rule.moduleFrom);
+//			if (!rootModuleFigures2.contains(f)){
+//				rootModuleFigures2.add(f);
+//			}
 //		}
-//		return rootModuleFigures;
+//		return rootModuleFigures2;
+		ModuleDTO[] rootModules = defineService.getModule_AllRootModules();
+		ArrayList<ModuleFigure> rootModuleFigures = new ArrayList<ModuleFigure>();
+		for (AbstractDTO rootModule : rootModules) {
+			ModuleFigure rootModuleFigure = figureFactory.createModuleFigure(rootModule);
+			rootModuleFigures.add(rootModuleFigure);
+		}
+		return rootModuleFigures;
 	}
 	
 	@Override
