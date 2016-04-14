@@ -84,6 +84,7 @@ public abstract class DrawingController {
 		try {
 			ArrayList<ModuleFigure> includedModuleFiguresInRoot = new ArrayList<ModuleFigure>();
 			ArrayList<ModuleFigure> allModuleFiguresInRoot = getModuleFiguresInRoot();
+			HashMap<String, ArrayList<ModuleFigure>> figuresToDraw = new HashMap<>();
 			if (drawingSettingsHolder.areExternalLibrariesShown()) {
 				// Select all modules in root
 				includedModuleFiguresInRoot = allModuleFiguresInRoot;
@@ -93,11 +94,17 @@ public abstract class DrawingController {
 					String moduleType = moduleFigureInRoot.getType().toLowerCase();
 					if (!moduleType.equals("externallibrary") && !moduleType.equals("library")) {
 						includedModuleFiguresInRoot.add(moduleFigureInRoot);	
+						
 					}
 				}
 			}
+			for (ModuleFigure moduleFigureInRoot : includedModuleFiguresInRoot){
+				figuresToDraw.put(moduleFigureInRoot.getUniqueName(), this.getChildModuleFiguresOfParent(moduleFigureInRoot.getUniqueName()));
+				parentFigureNameAndTypeMap.put(moduleFigureInRoot.getUniqueName(), moduleFigureInRoot.getType());
+			}
 			drawingSettingsHolder.resetCurrentPaths();
-			drawModulesAndRelations_SingleLevel(includedModuleFiguresInRoot.toArray(new ModuleFigure[includedModuleFiguresInRoot.size()]));
+			//drawModulesAndRelations_SingleLevel(includedModuleFiguresInRoot.toArray(new ModuleFigure[includedModuleFiguresInRoot.size()]));
+			drawModulesAndRelations_MultiLevel(figuresToDraw);
 		} catch (Exception e) {
 			logger.error(" Exception: " + e.getMessage());
 		}
