@@ -22,9 +22,12 @@ import org.apache.log4j.Logger;
 
 import husacct.ServiceProvider;
 import husacct.analyse.task.AnalyseTaskControl;
-import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.AlgorithmSettings;
+import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.Algorithm;
+import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.AlgorithmParameter;
 import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.Granularities;
 import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.RelationTypes;
+import husacct.analyse.task.reconstruct.parameters.NumberFieldPanel;
+import husacct.analyse.task.reconstruct.parameters.ParameterPanel;
 import husacct.common.dto.ReconstructArchitectureDTO;
 import husacct.common.help.presentation.HelpableJInternalFrame;
 import husacct.common.locale.ILocaleService;
@@ -60,22 +63,13 @@ public class ApproachesSettingsFrame extends HelpableJInternalFrame implements A
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.add(this.buildApproachLabel(), BorderLayout.NORTH);
 		
-		JPanel settingsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		for (String s : dto.thresholdSettings){
-			if (s.equals(AlgorithmSettings.Threshold)){
-				settingsPanel.add(this.buildThresHoldPanel());
-			}
-			else if (s.equals(AlgorithmSettings.RelationType)){
-				settingsPanel.add(this.buildRelationTypePanel());
-			}
-			else if (s.equals(AlgorithmSettings.Granularity)){
-				settingsPanel.add(this.buildGranularityPanel());
-			}
+		JPanel parametersPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		for (ParameterPanel pPanel : dto.parameterPanels){
+			pPanel.value = getParameterPanelValue(pPanel, dto);
+			parametersPanel.add(pPanel.createPanel());
 		}
-		mainPanel.add(settingsPanel, BorderLayout.CENTER);
-		
+		mainPanel.add(parametersPanel, BorderLayout.CENTER);
 		mainPanel.add(this.buildButtonPanel(), BorderLayout.SOUTH);
-		
 		return mainPanel;
 	}
 
@@ -86,15 +80,12 @@ public class ApproachesSettingsFrame extends HelpableJInternalFrame implements A
 		return approachLabelPanel;
 	}
 	
-	private JPanel buildThresHoldPanel(){
-		JPanel thresholdPanel = new JPanel();
-		JLabel thresholdLabel = new JLabel(getTranslation("Threshold"));
-		thresholdField = new JTextField();
-		thresholdField.setText(dto.threshold + "");
-		thresholdField.setColumns(10);
-		thresholdPanel.add(thresholdLabel);
-		thresholdPanel.add(thresholdField);
-		return thresholdPanel;
+	private Object getParameterPanelValue(ParameterPanel pPanel, ReconstructArchitectureDTO dto){
+		Object value  = null;
+		if (dto.approachConstant.equals(Algorithm.Component_HUSACCT_SelectedModule)){
+			value = dto.threshold;
+		}
+		return value;
 	}
 	
 	private JPanel buildRelationTypePanel(){
@@ -184,18 +175,18 @@ public class ApproachesSettingsFrame extends HelpableJInternalFrame implements A
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == applyButton) {
-			for (String s : dto.thresholdSettings){
-				if (s.equals(AlgorithmSettings.Threshold)){
+			for (ParameterPanel pPanel : dto.parameterPanels){
+				if (pPanel.parameterConstant.equals(AlgorithmParameter.Threshold)){
 					try{
-						dto.threshold = Integer.parseInt(thresholdField.getText());
+						dto.threshold = (int) pPanel.getValue();
 					}catch(Exception e){
-						logger.error("threshold is no int: " + e);
+						logger.error("threshold invalid parse: " + e);
 					}
 				}
-				else if (s.equals(AlgorithmSettings.RelationType)){
+				else if (pPanel.parameterConstant.equals(AlgorithmParameter.RelationType)){
 					dto.relationType = relationTypeGroup.getSelection().getActionCommand();
 				}
-				else if (s.equals(AlgorithmSettings.Granularity)){
+				else if (pPanel.parameterConstant.equals(AlgorithmParameter.Granularity)){
 					dto.granularity = granularityGroup.getSelection().getActionCommand();
 				}
 			}
