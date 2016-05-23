@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -88,15 +89,15 @@ public class ApproachesTableJPanel extends HelpableJPanel {
 	public void initUI() throws IOException{		
 		setLayout(new BorderLayout(0, 10));
 		
-		Object[][] tempData = {
+		Object[][] initializeTableRows = {
 			{"", ""},
 		};
 		
-		Object[] cols = {
+		Object[] initializeTableCols = {
 			"Parameter", "Value"	
 		};
-		distinctParameterTable = new JTable(tempData, cols);
-		allParameterTable = new JTable(tempData, cols);
+		distinctParameterTable = new JTable(initializeTableRows, initializeTableCols);
+		allParameterTable = new JTable(initializeTableRows, initializeTableCols);
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		
@@ -148,7 +149,7 @@ public class ApproachesTableJPanel extends HelpableJPanel {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
+				if (!e.getValueIsAdjusting() && !(tableAllApproaches.getSelectedRow() == -1)) {
 					int selectedRow = tableAllApproaches.getSelectedRow();
 					
 					ReconstructArchitectureDTO dto = new ReconstructArchitectureDTO();
@@ -167,8 +168,13 @@ public class ApproachesTableJPanel extends HelpableJPanel {
 						Object[] empty = {"", ""};
 						defaultTableModel.addRow(empty);
 						Object[] temp = rowData[i];
-						defaultTableModel.setValueAt(temp[0], i, 0);
-						defaultTableModel.setValueAt(temp[1], i, 1);
+						if(temp[1] != null && temp[1] != ""){
+							defaultTableModel.setValueAt(temp[0], i, 0);
+							defaultTableModel.setValueAt(temp[1], i, 1);
+						} else{
+							defaultTableModel.setValueAt(temp[0], i, 0);
+							defaultTableModel.setValueAt("N/A", i, 1);
+						}
 					}
 					
 					allParameterTable.setModel(defaultTableModel);
@@ -216,7 +222,7 @@ public class ApproachesTableJPanel extends HelpableJPanel {
 			
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
+				if (!e.getValueIsAdjusting() && !(tableDistinctApproaches.getSelectedRow() == -1)) {
 					int selectedRow = tableDistinctApproaches.getSelectedRow();
 					
 					ReconstructArchitectureDTO dto = new ReconstructArchitectureDTO();
@@ -235,8 +241,13 @@ public class ApproachesTableJPanel extends HelpableJPanel {
 						Object[] empty = {"", ""};
 						defaultTableModel.addRow(empty);
 						Object[] temp = rowData[i];
-						defaultTableModel.setValueAt(temp[0], i, 0);
-						defaultTableModel.setValueAt(temp[1], i, 1);
+						if(temp[1] != null && temp[1] != ""){
+							defaultTableModel.setValueAt(temp[0], i, 0);
+							defaultTableModel.setValueAt(temp[1], i, 1);
+						} else{
+							defaultTableModel.setValueAt(temp[0], i, 0);
+							defaultTableModel.setValueAt("N/A", i, 1);
+						}
 					}
 					
 					distinctParameterTable.setModel(defaultTableModel);

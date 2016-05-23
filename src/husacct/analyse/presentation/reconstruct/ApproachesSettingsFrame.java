@@ -11,12 +11,15 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
 
@@ -37,8 +40,8 @@ public class ApproachesSettingsFrame extends HelpableJInternalFrame implements A
 	private JFrame frame;
 	private JTextField thresholdField;
 	private AnalyseTaskControl analyseTaskControl;
-	private ButtonGroup relationTypeGroup;
-	private ButtonGroup granularityGroup;
+	private JComboBox<String> relationTypeComboBox;
+	private JComboBox<String> granularityComboBox;
 
 	
 	public ApproachesSettingsFrame(AnalyseTaskControl atc, ReconstructArchitectureDTO dto){
@@ -102,28 +105,12 @@ public class ApproachesSettingsFrame extends HelpableJInternalFrame implements A
 		JLabel relationTypeLabel = new JLabel(getTranslation("RelationType"));
 		relationTypePanel.add(relationTypeLabel);
 		
-		JPanel radioButtonPanel = new JPanel(new GridLayout(0,1));
-		relationTypeGroup = new ButtonGroup();
+		relationTypeComboBox = new JComboBox<String>();
+		relationTypeComboBox.addItem(RelationTypes.allDependencies);
+		relationTypeComboBox.addItem(RelationTypes.accessCallReferenceDependencies);
+		relationTypeComboBox.addItem(RelationTypes.umlLinks);
 		
-		JRadioButton button1 = new JRadioButton(getTranslation(RelationTypes.allDependencies));
-		button1.setActionCommand(RelationTypes.allDependencies);
-		relationTypeGroup.add(button1);
-		radioButtonPanel.add(button1);
-		button1.setSelected(dto.relationType.equals(RelationTypes.allDependencies));
-
-		JRadioButton button2 = new JRadioButton(getTranslation(RelationTypes.umlLinks));
-		button2.setActionCommand(RelationTypes.umlLinks);
-		relationTypeGroup.add(button2);
-		radioButtonPanel.add(button2);
-		button2.setSelected(dto.relationType.equals(RelationTypes.umlLinks));
-		
-		JRadioButton button3 = new JRadioButton(getTranslation(RelationTypes.accessCallReferenceDependencies));
-		button3.setActionCommand(RelationTypes.accessCallReferenceDependencies);
-		relationTypeGroup.add(button3);
-		radioButtonPanel.add(button3);
-		button3.setSelected(dto.relationType.equals(RelationTypes.accessCallReferenceDependencies));
-		
-		relationTypePanel.add(radioButtonPanel);
+		relationTypePanel.add(relationTypeComboBox);
 		relationTypePanel.setPreferredSize(new Dimension(580, 70));
 		
 		return relationTypePanel;
@@ -134,29 +121,12 @@ public class ApproachesSettingsFrame extends HelpableJInternalFrame implements A
 		JLabel granularityLabel = new JLabel(getTranslation("Granularity"));
 		granularityPanel.add(granularityLabel);
 		
-				
-		JPanel radioButtonPanel = new JPanel(new GridLayout(0,1));
-		granularityGroup = new ButtonGroup();
+		granularityComboBox = new JComboBox<String>();
+		granularityComboBox.addItem(Granularities.Classes);
+		granularityComboBox.addItem(Granularities.PackagesInRootOnlyClasses);
+		granularityComboBox.addItem(Granularities.PackagesWithAllClasses);
 		
-		JRadioButton button1 = new JRadioButton(getTranslation(Granularities.PackagesInRootOnlyClasses));
-		button1.setActionCommand(Granularities.PackagesInRootOnlyClasses);
-		granularityGroup.add(button1);
-		radioButtonPanel.add(button1);
-		button1.setSelected(dto.granularity.equals(Granularities.PackagesInRootOnlyClasses));
-
-		JRadioButton button2 = new JRadioButton(getTranslation(Granularities.PackagesWithAllClasses));
-		button2.setActionCommand(Granularities.PackagesWithAllClasses);
-		granularityGroup.add(button2);
-		radioButtonPanel.add(button2);
-		button2.setSelected(dto.granularity.equals(Granularities.PackagesWithAllClasses));
-		
-		JRadioButton button3 = new JRadioButton(getTranslation(Granularities.Classes));
-		button3.setActionCommand(Granularities.Classes);
-		granularityGroup.add(button3);
-		radioButtonPanel.add(button3);
-		button3.setSelected(dto.granularity.equals(Granularities.Classes));
-		
-		granularityPanel.add(radioButtonPanel);
+		granularityPanel.add(granularityComboBox);
 		granularityPanel.setPreferredSize(new Dimension(580, 70));
 		
 		return granularityPanel;
@@ -193,12 +163,13 @@ public class ApproachesSettingsFrame extends HelpableJInternalFrame implements A
 					}
 				}
 				else if (s.equals(AlgorithmSettings.RelationType)){
-					dto.relationType = relationTypeGroup.getSelection().getActionCommand();
+					dto.relationType = relationTypeComboBox.getSelectedItem().toString();
 				}
 				else if (s.equals(AlgorithmSettings.Granularity)){
-					dto.granularity = granularityGroup.getSelection().getActionCommand();
+					dto.granularity = granularityComboBox.getSelectedItem().toString();
 				}
 			}
+			
 			analyseTaskControl.reconstructArchitectureListDTO.updateReconstructArchitectureDTO(dto);
 			frame.dispose();
 		}
