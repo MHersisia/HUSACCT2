@@ -1,14 +1,15 @@
 package husacct.analyse.task.reconstruct.parameters;
 
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.text.NumberFormatter;
 
 import org.apache.log4j.Logger;
-
-import husacct.common.dto.ReconstructArchitectureDTO;
 
 
 public class NumberFieldPanel extends ParameterPanel{
@@ -24,9 +25,10 @@ public class NumberFieldPanel extends ParameterPanel{
 	
 	@Override
 	public JPanel createPanel() {
-		JPanel numberFieldPanel = new JPanel();
+		JPanel numberFieldPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		numberFieldPanel.setPreferredSize(new Dimension(300, 30));
 		String translatedLabel = getTranslation(label);
-		JLabel numberFieldLabel = new JLabel(getTranslation(translatedLabel));
+		JLabel numberFieldLabel = new JLabel(translatedLabel);
 		
 		NumberFormatter numberFormat = createFormatter();
 		numberField = new JFormattedTextField(numberFormat);
