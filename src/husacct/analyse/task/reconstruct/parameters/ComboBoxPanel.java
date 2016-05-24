@@ -23,7 +23,7 @@ public class ComboBoxPanel extends ParameterPanel{
 	@Override
 	public JPanel createPanel() {
 		JPanel comboBoxPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		comboBoxPanel.setPreferredSize(new Dimension(300, 30));
+		comboBoxPanel.setPreferredSize(new Dimension(400, 30));
 		JLabel jLabel = new JLabel(label);
 		comboBoxPanel.add(jLabel);
 		comboBox = new JComboBox<>(comboBoxValues);

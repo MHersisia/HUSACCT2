@@ -2,31 +2,23 @@ package husacct.analyse.presentation.reconstruct;
 
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
 
 import husacct.ServiceProvider;
 import husacct.analyse.task.AnalyseTaskControl;
-import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.Algorithm;
 import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.AlgorithmParameter;
-import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.Granularities;
-import husacct.analyse.task.reconstruct.AnalyseReconstructConstants.RelationTypes;
-import husacct.analyse.task.reconstruct.parameters.NumberFieldPanel;
 import husacct.analyse.task.reconstruct.parameters.ParameterPanel;
 import husacct.common.dto.ReconstructArchitectureDTO;
 import husacct.common.help.presentation.HelpableJInternalFrame;
